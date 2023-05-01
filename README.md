@@ -7,7 +7,7 @@ I am setting up my homelab and need a few more capabilities than what Pi-hole of
 ## DNS Resolution Chain
 
 * incoming request on :53
-* forward to bind9 for local resolution of my private DNS zone
+* forward to bind9 for local resolution of a private DNS zone
 * forward to Pi-hole for ad blocking
 * forward to Cloudflare for public lookups and malware blocking DNS over HTTPS
   * using [dnscrypt-proxy](https://hub.docker.com/r/klutchell/dnscrypt-proxy) and [Cloudflare malware blocking DoH](https://developers.cloudflare.com/1.1.1.1/setup/#dns-over-https-doh)

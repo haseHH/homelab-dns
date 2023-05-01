@@ -1,1 +1,14 @@
 ---
+# Location where configuration files will be stored
+config_dir: '~/homelab-dns'
+
+# DNS entries for the bind9 server in your private zone
+# These will be translated into A and PTR records
+dns_zone: "home.example.com"
+hosts:
+  - name: "server1" # will resolve "server1.home.example.com" to 192.168.1.11
+    addr: "192.168.1.11"
+  - name: "server2"
+    addr: "192.168.1.12"
+  - name: "*.server2" # wildcard will resolve all subdomains of "server2.home.example.com" to 192.168.1.12
+    addr: "192.168.1.12"

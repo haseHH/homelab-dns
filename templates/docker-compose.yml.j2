@@ -1,0 +1,38 @@
+# {{ ansible_managed }}
+---
+version: "3"
+
+networks:
+  resolver-internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "192.168.48.0/29" # static network configuration needed since bind9 upstream can't be a hostname
+          gateway: "192.168.48.1"
+
+services:
+  bind9:
+    container_name: bind9
+    image: cytopia/bind:stable
+    pull_policy: always
+    environment:
+      - DNS_FORWARDER=1.1.1.1 # temporary cloudflare upstream
+{% set a_records = ['ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']] %}
+{% for host in hosts %}
+{% set null = a_records.append(host['name'] ~ '.' ~ dns_zone ~ '=' ~ host['addr']) %}
+{% endfor %}
+      - DNS_A={{ a_records|join(', ') }}
+{% set ptr_records = [ansible_facts['default_ipv4']['address'] ~ '=' ~ 'ns.' ~ dns_zone] %}
+{% for host in hosts %}
+{% if '*' not in host['name'] %}
+{% set null = ptr_records.append(host['addr'] ~ '=' ~ host['name'] ~ '.' ~ dns_zone) %}
+{% endif %}
+{% endfor %}
+      - DNS_PTR={{ ptr_records|join(', ') }}
+    ports:
+      - "53:53/tcp" # ToDo: answers to local requests, but not from other clients
+      - "53:53/udp" # ToDo: answers to local requests, but not from other clients
+    networks:
+      resolver-internal:
+        ipv4_address: "192.168.48.2"
+    restart: unless-stopped

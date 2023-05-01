@@ -31,6 +31,14 @@ ansible-galaxy collection install -r requirements.yml
 
 Then create copies of all files containing `example.` and remove the prefix from their name. Adjust the contents according to your environment and run the playbook using `ansible-playbook main.yml`.
 
+## Components
+
+### BIND 9 DNS Server
+
+* Image: [cytopia/docker-bind](https://github.com/cytopia/docker-bind)
+* Entrypoint for DNS requests for our chain
+* DNS server for the zone used by the homelab, e.g. `home.example.com`
+
 ## Acknowledgements
 
 Ansible configuration insipired by and adapted from Jeff Geerlings [Internet Pi](https://github.com/geerlingguy/internet-pi).

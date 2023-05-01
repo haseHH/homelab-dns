@@ -15,3 +15,26 @@
   tasks:
     - name: Install Docker if not available
       ansible.builtin.import_tasks: tasks/docker-setup.yml
+
+    - name: Create config directory if it does not exist
+      ansible.builtin.file:
+        path: "{{ config_dir }}"
+        state: directory
+
+    - name: Copy templated config files into place
+      ansible.builtin.template:
+        src: templates/{{ item.src }}
+        dest: "{{ config_dir }}/{{ item.dest }}"
+      loop:
+        - src: docker-compose.yml.j2
+          dest: docker-compose.yml
+
+    - name: Ensure homelab-dns configuration is running
+      ansible.builtin.command:
+        cmd: docker compose up --detach
+        chdir: "{{ config_dir }}"
+      register: docker_compose
+
+    - name: docker compose output
+      ansible.builtin.debug:
+        var: docker_compose

@@ -13,5 +13,5 @@
       become: true
 
   tasks:
-    - name: Install Docker if not available.
+    - name: Install Docker if not available
       ansible.builtin.import_tasks: tasks/docker-setup.yml

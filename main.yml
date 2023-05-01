@@ -1,0 +1,17 @@
+---
+- name: Configure Homelab DNS.
+  hosts: homelab_dns
+
+  pre_tasks:
+    - name: Load configuration.
+      ansible.builtin.include_vars: config.yml
+
+    - name: Update apt cache.
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+      become: true
+
+  tasks:
+    - name: Install Docker if not available.
+      ansible.builtin.import_tasks: tasks/docker-setup.yml

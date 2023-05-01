@@ -1,0 +1,36 @@
+---
+- name: Check if Docker is installed
+  ansible.builtin.command: which docker
+  failed_when: false
+  changed_when: false
+  check_mode: false
+  register: docker_command_result
+
+- name: Download Docker convenience install script
+  ansible.builtin.get_url:
+    url: https://get.docker.com/
+    dest: /tmp/get-docker.sh
+    mode: 0775
+  when: docker_command_result.rc == 1
+
+- name: Run install script
+  ansible.builtin.command: /tmp/get-docker.sh
+  become: true
+  when: docker_command_result.rc == 1
+
+- name: Ensure Docker is started
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+
+- name: Ensure user is part of the docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true
+  become: true
+
+- name: Reset connection so docker group is picked up
+  ansible.builtin.meta: reset_connection

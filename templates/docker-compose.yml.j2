@@ -32,6 +32,9 @@ services:
 {% endif %}
 {% endfor %}
       - DNS_PTR={{ ptr_records|join(', ') }}
+{% if cname_records|default([])|length > 0 %}
+      - DNS_CNAME={{ cname_records|join(', ') }}
+{% endif %}
       - ALLOW_QUERY={{ allowed_clients }}
     ports:
       - "53:53/tcp"

@@ -2,6 +2,10 @@
 # Location where configuration files will be stored
 config_dir: '~/homelab-dns'
 
+# Subnets that are allowed to use the resolver
+# comma separated list of IP addresses, IP addresses with CIDR mask, or address match list names "none", "any", "localhost", and "localnets"
+allowed_clients: "192.168.1.0/24,127.0.0.1"
+
 # DNS entries for the bind9 server in your private zone
 # These will be translated into A and PTR records
 dns_zone: "home.example.com"

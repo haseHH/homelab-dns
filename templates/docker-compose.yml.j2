@@ -29,9 +29,10 @@ services:
 {% endif %}
 {% endfor %}
       - DNS_PTR={{ ptr_records|join(', ') }}
+      - ALLOW_QUERY={{ allowed_clients }}
     ports:
-      - "53:53/tcp" # ToDo: answers to local requests, but not from other clients
-      - "53:53/udp" # ToDo: answers to local requests, but not from other clients
+      - "53:53/tcp"
+      - "53:53/udp"
     networks:
       resolver-internal:
         ipv4_address: "192.168.48.2"

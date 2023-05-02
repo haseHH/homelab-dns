@@ -37,4 +37,4 @@
 
     - name: docker compose output
       ansible.builtin.debug:
-        var: docker_compose
+        msg: "{{ docker_compose['stderr_lines'] }}"

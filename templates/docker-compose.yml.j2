@@ -21,6 +21,9 @@ services:
 {% for host in hosts %}
 {% set null = a_records.append(host['name'] ~ '.' ~ dns_zone ~ '=' ~ host['addr']) %}
 {% endfor %}
+{% for record in additional_a_records|default([]) %}
+{% set null = a_records.append(record) %}
+{% endfor %}
       - DNS_A={{ a_records|join(', ') }}
 {% set ptr_records = [ansible_facts['default_ipv4']['address'] ~ '=' ~ 'ns.' ~ dns_zone] %}
 {% for host in hosts %}

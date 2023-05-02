@@ -16,3 +16,7 @@ hosts:
     addr: "192.168.1.12"
   - name: "*.server2" # wildcard will resolve all subdomains of "server2.home.example.com" to 192.168.1.12
     addr: "192.168.1.12"
+
+# (optional) Additional A records outside of your private zone
+additional_a_records:
+  - somewhere.else.net=0.0.0.0

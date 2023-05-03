@@ -1,6 +1,15 @@
 ---
+
+#################################################
+# General parameters                            #
+#################################################
+
 # Location where configuration files will be stored
 config_dir: '~/homelab-dns'
+
+#################################################
+# BIND9 DNS server options                      #
+#################################################
 
 # Subnets that are allowed to use the resolver
 # comma separated list of IP addresses, IP addresses with CIDR mask, or address match list names "none", "any", "localhost", and "localnets"

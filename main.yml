@@ -16,10 +16,12 @@
     - name: Install Docker if not available
       ansible.builtin.import_tasks: tasks/docker-setup.yml
 
-    - name: Create config directory if it does not exist
+    - name: Create config directories if they do not exist
       ansible.builtin.file:
-        path: "{{ config_dir }}"
+        path: "{{ item }}"
         state: directory
+      loop:
+        - "{{ config_dir }}"
 
     - name: Copy templated config files into place
       ansible.builtin.template:

@@ -14,7 +14,7 @@ I am setting up my homelab and need a few more capabilities than what Pi-hole of
 
 ## Preparation
 
-Setup your Pi with Raspberry Pi OS Lite (or any other system with any Debian based distribution, I didn't thest this on anything else though), set your hostname to `ns` and set a static IP. You'll also want to activate the SSH server if it is not active yet.
+Setup your Pi with Raspberry Pi OS Lite (or any other system with any Debian based distribution, I didn't test this on anything else though), set your hostname to `ns` and set a static IP. You'll also want to activate the SSH server if it is not active yet.
 
 Either use the devcontainer for the setup or [install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html), for example like this:
 

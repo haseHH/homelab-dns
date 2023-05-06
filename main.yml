@@ -24,6 +24,7 @@
         - "{{ config_dir }}"
         - "{{ config_dir }}/record-service"
         - "{{ config_dir }}/record-service/www"
+        - "{{ config_dir }}/record-service/config"
 
     - name: Copy templated config files into place
       ansible.builtin.template:
@@ -38,6 +39,8 @@
           dest: record-service/www/api.json
         - src: record-service/www/api.yaml.j2
           dest: record-service/www/api.yaml
+        - src: record-service/config/yaml-mime-type.conf.j2
+          dest: record-service/config/yaml-mime-type.conf
 
     - name: Ensure homelab-dns configuration is running
       ansible.builtin.command:

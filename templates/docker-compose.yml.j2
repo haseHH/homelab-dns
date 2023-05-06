@@ -94,5 +94,6 @@ services:
       resolver-external:
     volumes:
       - ./record-service/www:/usr/share/nginx/html
+      - ./record-service/config/yaml-mime-type.conf:/etc/nginx/conf.d/yaml-mime-type.conf:ro
 {% endif %}
 {% endif %}

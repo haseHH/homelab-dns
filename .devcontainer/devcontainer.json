@@ -7,19 +7,19 @@
     // Features to add to the dev container. More info: https://containers.dev/features.
     "features": {
         "ghcr.io/devcontainers/features/docker-in-docker:2": {
-			"moby": true,
-			"azureDnsAutoDetection": true,
-			"installDockerBuildx": true,
-			"version": "latest",
-			"dockerDashComposeVersion": "v2"
-		},
+            "moby": true,
+            "azureDnsAutoDetection": true,
+            "installDockerBuildx": true,
+            "version": "latest",
+            "dockerDashComposeVersion": "v2"
+        },
         "ghcr.io/devcontainers-contrib/features/ansible:2": {
-			"version": "latest"
-		},
-		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-			"upgradePackages": true,
-			"packages": "sshpass, dnsutils"
-		}
+            "version": "latest"
+        },
+        "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+            "upgradePackages": true,
+            "packages": "sshpass, dnsutils"
+        }
     },
 
     // Use 'forwardPorts' to make a list of ports inside the container available locally.

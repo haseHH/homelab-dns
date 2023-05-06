@@ -1,0 +1,112 @@
+<html>
+    <head>
+        <!-- {{ ansible_managed }} -->
+        <title>BIND9 DNS Entries</title>
+        <style type="text/css">
+            body {
+                background-color: black;
+                color: lightgray;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            code {
+                padding: 5px;
+                background-color: rgb(94, 94, 94);
+                font-family: monospace;
+            }
+            table {
+                background-color: rgb(94, 94, 94);
+                border-collapse: collapse;
+                border: 2px solid lightgray;
+            }
+            th, td {
+                padding: 5px;
+                border: 1px solid lightgray;
+            }
+        </style>
+    </head>
+    <body>
+{% if not activate_record_list_service|default(false) %}
+        <!-- The DNS record list service was not activated. -->
+{% else %}
+        <h1>BIND9 DNS Entries</h1>
+
+        <h2>A Records in private zone <code>{{ dns_zone }}</code></h2>
+        <table>
+            <tr>
+                <th>FQDN</th>
+                <th>IP</th>
+            </tr>
+            <tr>
+                <td><code>ns.{{ dns_zone }}</code></td>
+                <td><code>{{ ansible_facts['default_ipv4']['address'] }}</code></td>
+            </tr>
+{% if activate_webinterfaces %}
+{% if activate_traefik_dashboard %}
+            <tr>
+                <td><code>traefik.ns.{{ dns_zone }}</code></td>
+                <td><code>{{ ansible_facts['default_ipv4']['address'] }}</code></td>
+            </tr>
+{% endif %}
+{% endif %}
+{% for host in hosts|default([]) %}
+            <tr>
+                <td><code>{{ host['name'] }}.{{ dns_zone }}</code></td>
+                <td><code>{{ host['addr'] }}</code></td>
+            </tr>
+{% endfor %}
+        </table>
+
+{% if additional_a_records|default([])|length > 0 %}
+        <h2>Additional A Records</h2>
+        <table>
+            <tr>
+                <th>FQDN</th>
+                <th>IP</th>
+            </tr>
+{% for record in additional_a_records %}
+            <tr>
+                <td><code>{{ record.split('=')[0] }}</code></td>
+                <td><code>{{ record.split('=')[1] }}</code></td>
+            </tr>
+{% endfor %}
+        </table>
+{% endif %}
+
+        <h2>PTR Records</h2>
+        <table>
+            <tr>
+                <th>IP</th>
+                <th>FQDN</th>
+            </tr>
+{% set ptr_records = [ansible_facts['default_ipv4']['address'] ~ '=' ~ 'ns.' ~ dns_zone] %}
+{% for host in hosts %}
+{% if '*' not in host['name'] %}
+{% set null = ptr_records.append(host['addr'] ~ '=' ~ host['name'] ~ '.' ~ dns_zone) %}
+{% endif %}
+{% endfor %}
+{% for record in ptr_records %}
+            <tr>
+                <td><code>{{ record.split('=')[0] }}</code></td>
+                <td><code>{{ record.split('=')[1] }}</code></td>
+            </tr>
+{% endfor %}
+        </table>
+
+{% if cname_records|default([])|length > 0 %}
+        <h2>CNAME Records</h2>
+        <table>
+            <tr>
+                <th>FQDN</th>
+                <th>Target</th>
+            </tr>
+{% for record in cname_records %}
+            <tr>
+                <td><code>{{ record.split('=')[0] }}</code></td>
+                <td><code>{{ record.split('=')[1] }}</code></td>
+            </tr>
+{% endfor %}
+        </table>
+{% endif %}
+{% endif %}
+    </body>
+</html>

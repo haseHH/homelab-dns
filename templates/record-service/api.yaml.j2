@@ -1,0 +1,45 @@
+# {{ ansible_managed }}
+---
+{% if not activate_record_list_service|default(false) %}
+warning: "The DNS record list service was not activated."
+{% else %}
+a_records_private:
+{% set a_records_private = ['ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']] %}
+{% if activate_webinterfaces %}
+{% if activate_traefik_dashboard %}
+{% set null = a_records_private.append('traefik.ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']) %}
+{% endif %}
+{% endif %}
+{% for host in hosts %}
+{% set null = a_records_private.append(host['name'] ~ '.' ~ dns_zone ~ '=' ~ host['addr']) %}
+{% endfor %}
+{% for record in a_records_private %}
+  - fqdn: "{{ record.split('=')[0] }}"
+    ip: "{{ record.split('=')[1] }}"
+{% endfor %}
+{% if additional_a_records|default([])|length > 0 %}
+a_records_additional:
+{% for record in additional_a_records %}
+  - fqdn: "{{ record.split('=')[0] }}"
+    ip: "{{ record.split('=')[1] }}"
+{% endfor %}
+{% endif %}
+ptr_records:
+{% set ptr_records = [ansible_facts['default_ipv4']['address'] ~ '=' ~ 'ns.' ~ dns_zone] %}
+{% for host in hosts %}
+{% if '*' not in host['name'] %}
+{% set null = ptr_records.append(host['addr'] ~ '=' ~ host['name'] ~ '.' ~ dns_zone) %}
+{% endif %}
+{% endfor %}
+{% for record in ptr_records %}
+  - fqdn: "{{ record.split('=')[0] }}"
+    ip: "{{ record.split('=')[1] }}"
+{% endfor %}
+{% if cname_records|default([])|length > 0 %}
+cname_records:
+{% for record in cname_records %}
+  - fqdn: "{{ record.split('=')[0] }}"
+    ip: "{{ record.split('=')[1] }}"
+{% endfor %}
+{% endif %}
+{% endif %}

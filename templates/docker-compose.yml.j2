@@ -82,4 +82,17 @@ services:
       resolver-external:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+{% if activate_record_list_service %}
+  record-service:
+    image: nginx:1.24.0
+    container_name: record-service
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.record-service.rule=Host(`ns.{{ dns_zone }}`)"
+      - "traefik.http.routers.record-service.entrypoints=web"
+    networks:
+      resolver-external:
+    volumes:
+      - ./record-service:/usr/share/nginx/html
+{% endif %}
 {% endif %}

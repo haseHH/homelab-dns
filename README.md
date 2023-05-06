@@ -39,6 +39,14 @@ Some applications offer webinterfaces and APIs, these are made available via [tr
 
 Informational dashboard and API, can be made available on the `traefik`-subdomain, e.g. `traefik.ns.home.example.com`.
 
+### DNS Record Service
+
+A small webserver with a list of all DNS entries that were configured on the BIND9 server, can be served at the host FQDN, e.g. `ns.home.example.com`. Available formats are:
+
+* `HTML` aka human readable tables
+* `JSON` for automated parsing, available at `/api.json`
+* `YAML` for automated parsing, available at `/api.yaml`
+
 ## Components
 
 ### BIND 9 DNS Server

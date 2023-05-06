@@ -35,6 +35,10 @@ Then create copies of all files containing `example.` and remove the prefix from
 
 Some applications offer webinterfaces and APIs, these are made available via [traefik](https://traefik.io/) and can be de-/activated in the `Configure webinterfaces` section of your [config.yml](./example.config.yml). Most services are informational endpoints, but Pi-hole offers some configuration via the GUI, which will be persisted in the file system as well.
 
+### Traefik Dashboard and API
+
+Informational dashboard and API, can be made available on the `traefik`-subdomain, e.g. `traefik.ns.home.example.com`.
+
 ## Components
 
 ### BIND 9 DNS Server

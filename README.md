@@ -24,9 +24,6 @@ sudo apt-get install -y python3-pip
 
 # setup Ansible
 pip3 install ansible
-
-# install this playbooks requirements (may need a refresh of the session)
-ansible-galaxy collection install -r requirements.yml
 ```
 
 Then create copies of all files containing `example.` and remove the prefix from their name. Adjust the contents according to your environment and run the playbook using `ansible-playbook main.yml`.

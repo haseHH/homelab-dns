@@ -33,3 +33,14 @@ additional_a_records:
 # (optional) CNAME records
 cname_records:
   - some.external.domain=internal.home.example.com
+
+#################################################
+# Configure webinterfaces                       #
+#################################################
+
+# Activate webinterfaces
+# Setting this to false will cause the code to ignore everything else in this section.
+activate_webinterfaces: true
+
+# Activate the traefik API and Dashboard (on 'traefik'-subdomain, e.g. traefik.ns.home.example.com)
+activate_traefik_dashboard: true

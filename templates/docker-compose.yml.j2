@@ -9,6 +9,10 @@ networks:
       config:
         - subnet: "192.168.48.0/29" # static network configuration needed since bind9 upstream can't be a hostname
           gateway: "192.168.48.1"
+{% if activate_webinterfaces %}
+  resolver-external:
+    driver: bridge
+{% endif %}
 
 services:
   bind9:
@@ -18,6 +22,11 @@ services:
     environment:
       - DNS_FORWARDER=1.1.1.1 # temporary cloudflare upstream
 {% set a_records = ['ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']] %}
+{% if activate_webinterfaces %}
+{% if activate_traefik_dashboard %}
+{% set null = a_records.append('traefik.ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']) %}
+{% endif %}
+{% endif %}
 {% for host in hosts %}
 {% set null = a_records.append(host['name'] ~ '.' ~ dns_zone ~ '=' ~ host['addr']) %}
 {% endfor %}
@@ -43,3 +52,34 @@ services:
       resolver-internal:
         ipv4_address: "192.168.48.2"
     restart: unless-stopped
+{% if activate_webinterfaces %}
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    command:
+{% if activate_traefik_dashboard %}
+      - "--api.dashboard=true"
+      # ToDo: implement auth
+{% endif %}
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=resolver-external"
+      - "--entrypoints.web.address=:80"
+      # ToDo: implement optional HTTPS
+    labels:
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.ns.{{ dns_zone }}`) && PathPrefix(`/`)"
+      - "traefik.http.routers.dashboard.service=dashboard@internal"
+      - "traefik.http.routers.dashboard.entrypoints=web"
+{% if activate_traefik_dashboard %}
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`traefik.ns.{{ dns_zone }}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.entrypoints=web"
+{% endif %}
+    ports:
+      - "80:80"
+    networks:
+      resolver-external:
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+{% endif %}

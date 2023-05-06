@@ -23,6 +23,7 @@
       loop:
         - "{{ config_dir }}"
         - "{{ config_dir }}/record-service"
+        - "{{ config_dir }}/record-service/www"
 
     - name: Copy templated config files into place
       ansible.builtin.template:
@@ -31,12 +32,12 @@
       loop:
         - src: docker-compose.yml.j2
           dest: docker-compose.yml
-        - src: record-service/index.html.j2
-          dest: record-service/index.html
-        - src: record-service/api.json.j2
-          dest: record-service/api.json
-        - src: record-service/api.yaml.j2
-          dest: record-service/api.yaml
+        - src: record-service/www/index.html.j2
+          dest: record-service/www/index.html
+        - src: record-service/www/api.json.j2
+          dest: record-service/www/api.json
+        - src: record-service/www/api.yaml.j2
+          dest: record-service/www/api.yaml
 
     - name: Ensure homelab-dns configuration is running
       ansible.builtin.command:

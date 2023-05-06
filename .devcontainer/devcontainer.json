@@ -29,7 +29,17 @@
     // "postCreateCommand": "if [ -f requirements.yml ]; then ansible-galaxy collection install -r requirements.yml; fi"
 
     // Configure tool-specific properties.
-    // "customizations": {},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "eamodio.gitlens",
+                "yzhang.markdown-all-in-one",
+                "DavidAnson.vscode-markdownlint",
+                "vscode-icons-team.vscode-icons",
+                "redhat.vscode-yaml"
+            ]
+        }
+    }
 
     // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
     // "remoteUser": "root"

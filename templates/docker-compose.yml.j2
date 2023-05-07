@@ -19,11 +19,14 @@ services:
     container_name: bind9
     image: cytopia/bind:0.35
     environment:
-      - DNS_FORWARDER=1.1.1.1 # temporary cloudflare upstream
+      - DNS_FORWARDER=192.168.48.3 # use Pi-hole as upstream
 {% set a_records = ['ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']] %}
 {% if activate_webinterfaces %}
 {% if activate_traefik_dashboard %}
 {% set null = a_records.append('traefik.ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']) %}
+{% endif %}
+{% if activate_pihole_webgui %}
+{% set null = a_records.append('pihole.ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']) %}
 {% endif %}
 {% endif %}
 {% for host in hosts %}
@@ -50,6 +53,45 @@ services:
     networks:
       resolver-internal:
         ipv4_address: "192.168.48.2"
+    restart: unless-stopped
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:2023.03.1
+{% if activate_webinterfaces %}
+{% if activate_pihole_webgui %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.rule=Host(`pihole.ns.{{ dns_zone }}`)"
+      - "traefik.http.routers.pihole.entrypoints=web"
+      - "traefik.http.routers.pihole.service=pihole" # manual service config to address the correct port
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+{% endif %}
+{% endif %}
+    environment:
+{% if activate_webinterfaces %}
+{% if activate_pihole_webgui %}
+      WEBPASSWORD: Changeme01 #ToDo: parameterize
+      VIRTUAL_HOST: "pihole.ns.{{ dns_zone }}"
+{% endif %}
+{% endif %}
+      PIHOLE_DNS_: "1.1.1.1#53" # temporary cloudflare upstream
+      WEBTHEME: default-dark
+      DNSMASQ_LISTENING: local
+      FTLCONF_LOCAL_IPV4: "{{ ansible_facts['default_ipv4']['address'] }}"
+      FTLCONF_BLOCK_ICLOUD_PR: "true" # prevent Apple devices from bypassing Pi-hole https://docs.pi-hole.net/ftldns/configfile/#icloud_private_relay
+      FTLCONF_MOZILLA_CANARY: "true" # prevent Firefox from bypassing Pi-hole https://docs.pi-hole.net/ftldns/configfile/#mozilla_canary
+      FTLCONF_PIHOLE_PTR: NONE
+    networks:
+{% if activate_webinterfaces %}
+{% if activate_pihole_webgui %}
+      resolver-external:
+{% endif %}
+{% endif %}
+      resolver-internal:
+        ipv4_address: "192.168.48.3"
+    volumes:
+      - './pihole/etc:/etc/pihole'
+      - './pihole/dnsmasq:/etc/dnsmasq.d'
     restart: unless-stopped
 {% if activate_webinterfaces %}
   traefik:

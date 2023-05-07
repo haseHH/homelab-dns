@@ -47,6 +47,12 @@
                 <td><code>{{ ansible_facts['default_ipv4']['address'] }}</code></td>
             </tr>
 {% endif %}
+{% if activate_pihole_webgui %}
+            <tr>
+                <td><code>pihole.ns.{{ dns_zone }}</code></td>
+                <td><code>{{ ansible_facts['default_ipv4']['address'] }}</code></td>
+            </tr>
+{% endif %}
 {% endif %}
 {% for host in hosts|default([]) %}
             <tr>

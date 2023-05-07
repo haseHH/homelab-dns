@@ -9,6 +9,9 @@ a_records_private:
 {% if activate_traefik_dashboard %}
 {% set null = a_records_private.append('traefik.ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']) %}
 {% endif %}
+{% if activate_pihole_webgui %}
+{% set null = a_records_private.append('pihole.ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']) %}
+{% endif %}
 {% endif %}
 {% for host in hosts %}
 {% set null = a_records_private.append(host['name'] ~ '.' ~ dns_zone ~ '=' ~ host['addr']) %}

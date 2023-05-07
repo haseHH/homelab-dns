@@ -57,3 +57,6 @@ activate_traefik_dashboard: true
 # Serve DNS record list (served at the host FQDN, e.g. ns.home.example.com)
 # A small webserver with a list of all DNS entries that were configured in the BIND9 section
 activate_record_list_service: true
+
+# Activate the Pi-hole web GUI (on 'pihole'-subdomain, e.g. pihole.ns.home.example.com)
+activate_pihole_webgui: true

@@ -17,8 +17,7 @@ networks:
 services:
   bind9:
     container_name: bind9
-    image: cytopia/bind:stable
-    pull_policy: always
+    image: cytopia/bind:0.35
     environment:
       - DNS_FORWARDER=1.1.1.1 # temporary cloudflare upstream
 {% set a_records = ['ns.' ~ dns_zone ~ '=' ~ ansible_facts['default_ipv4']['address']] %}

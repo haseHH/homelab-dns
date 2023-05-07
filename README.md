@@ -28,6 +28,14 @@ pip3 install ansible
 
 Then create copies of all files containing `example.` and remove the prefix from their name. Adjust the contents according to your environment and run the playbook using `ansible-playbook main.yml`.
 
+## Components
+
+### BIND 9 DNS Server
+
+* Image: [cytopia/docker-bind](https://github.com/cytopia/docker-bind)
+* Entrypoint for DNS requests for our chain
+* DNS server for the zone used by the homelab, e.g. `home.example.com`
+
 ## Webinterfaces
 
 Some applications offer webinterfaces and APIs, these are made available via [traefik](https://traefik.io/) and can be de-/activated in the `Configure webinterfaces` section of your [config.yml](./example.config.yml). Most services are informational endpoints, but Pi-hole offers some configuration via the GUI, which will be persisted in the file system as well.
@@ -43,14 +51,6 @@ A small webserver with a list of all DNS entries that were configured on the BIN
 * `HTML` aka human readable tables
 * `JSON` for automated parsing, available at `/api.json`
 * `YAML` for automated parsing, available at `/api.yaml`
-
-## Components
-
-### BIND 9 DNS Server
-
-* Image: [cytopia/docker-bind](https://github.com/cytopia/docker-bind)
-* Entrypoint for DNS requests for our chain
-* DNS server for the zone used by the homelab, e.g. `home.example.com`
 
 ## Acknowledgements
 

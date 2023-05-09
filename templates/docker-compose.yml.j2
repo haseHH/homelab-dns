@@ -123,6 +123,7 @@ services:
       resolver-external:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: unless-stopped
 {% if activate_record_list_service %}
   record-service:
     image: nginx:1.24.0
@@ -136,5 +137,6 @@ services:
     volumes:
       - ./record-service/www:/usr/share/nginx/html
       - ./record-service/config/yaml-mime-type.conf:/etc/nginx/conf.d/yaml-mime-type.conf:ro
+    restart: unless-stopped
 {% endif %}
 {% endif %}

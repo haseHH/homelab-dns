@@ -54,3 +54,10 @@
     - name: docker compose output
       ansible.builtin.debug:
         msg: "{{ docker_compose['stderr_lines'] }}"
+
+    - name: Block forwarding of requests in the private zone to public servers
+      ansible.builtin.command:
+        cmd: "docker exec pihole pihole --wild {{ dns_zone }}"
+      when: block_private_requests_to_public_servers
+      register: block_private_requests_to_public
+      changed_when: "'Adding' in block_private_requests_to_public.stdout"

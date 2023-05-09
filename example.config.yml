@@ -44,6 +44,15 @@ cname_records:
   - some.external.domain=internal.home.example.com
 
 #################################################
+# Pi-hole options                               #
+#################################################
+
+# Block forwarding of requests in the private zone to public servers
+# Sometimes, e.g. due to typos, it can happen that a requested FQDN isn't resolved by the bind9 server.
+# Not forwarding them to the outside world improves your privacy.
+block_private_requests_to_public_servers: true
+
+#################################################
 # Configure webinterfaces                       #
 #################################################
 

@@ -1,5 +1,12 @@
 # Homelab DNS
 
+[![MIT license](https://img.shields.io/badge/License-MIT-blue?style=flat&labelColor=dimgrey)](./LICENSE)
+[![Made with Visual Studio Code](https://img.shields.io/badge/Made%20with%20VSCode-dimgrey?style=flat&logo=visual%20studio%20code&logoColor=blue)](https://code.visualstudio.com/)
+[![Deploys with Ansible](https://img.shields.io/badge/Deploys%20with%20Ansible-dimgrey?style=flat&logo=ansible&logoColor=black)](https://www.ansible.com/)
+[![Includes Pi-hole](https://img.shields.io/badge/Includes%20Pi%20Hole-dimgrey?style=flat&logo=pihole&logoColor=firebrick)](https://pi-hole.net/)
+[![Deploys on Docker](https://img.shields.io/badge/Deploys%20on%20Docker-dimgrey?style=flat&logo=docker&logoColor=blue)](https://www.docker.com/)
+[![Runs on Raspberry Pi](https://img.shields.io/badge/Runs%20on%20Raspberry%20Pi-dimgrey?style=flat&logo=raspberrypi&logoColor=firebrick)](https://www.raspberrypi.org/)
+
 > This is a work in progress. Documentation is lacking and features are unfinished.
 
 I am setting up my homelab and need a few more capabilities than what Pi-hole offers out of the box - time to plug a few containers together and throw them on an old Raspberry Pi.

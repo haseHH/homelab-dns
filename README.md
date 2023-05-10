@@ -10,7 +10,7 @@ I am setting up my homelab and need a few more capabilities than what Pi-hole of
 * forward to bind9 for local resolution of a private DNS zone
 * forward to Pi-hole for ad blocking
 * forward to Cloudflare for public lookups and malware blocking DNS over HTTPS
-  * using [dnscrypt-proxy](https://hub.docker.com/r/klutchell/dnscrypt-proxy) and [Cloudflare malware blocking DoH](https://developers.cloudflare.com/1.1.1.1/setup/#dns-over-https-doh)
+  * using [dnscrypt-proxy](https://github.com/DNSCrypt/dnscrypt-proxy) and [Cloudflare malware blocking DoH](https://developers.cloudflare.com/1.1.1.1/setup/#dns-over-https-doh)
 
 ## Preparation
 
@@ -40,6 +40,14 @@ Then create copies of all files containing `example.` and remove the prefix from
 
 * Image: [pihole/pihole](https://github.com/pi-hole/docker-pi-hole)
 * Adblocker for the network on the DNS level
+
+### dnscrypt-proxy
+
+* Image: [klutchell/dnscrypt-proxy](https://github.com/klutchell/dnscrypt-proxy-docker)
+* Forwards DNS requests over HTTPS, hiding them from your ISP
+* Configured to use [Cloudflares malware-blocking DoH endpoint](https://developers.cloudflare.com/1.1.1.1/setup/#dns-over-https-doh)
+  * Cloudflare puts emphasize on speed, availability and privacy
+  * Free malware blocking is always a nice bonus, aight?
 
 ## Webinterfaces
 

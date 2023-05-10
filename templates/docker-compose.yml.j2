@@ -74,7 +74,7 @@ services:
       VIRTUAL_HOST: "pihole.ns.{{ dns_zone }}"
 {% endif %}
 {% endif %}
-      PIHOLE_DNS_: "1.1.1.1#53" # temporary cloudflare upstream
+      PIHOLE_DNS_: "192.168.48.4#5053" # use dnscrypt-proxy as upstream
       WEBTHEME: default-dark
       DNSMASQ_LISTENING: local
       FTLCONF_LOCAL_IPV4: "{{ ansible_facts['default_ipv4']['address'] }}"
@@ -92,6 +92,15 @@ services:
     volumes:
       - './pihole/etc:/etc/pihole'
       - './pihole/dnsmasq:/etc/dnsmasq.d'
+    restart: unless-stopped
+  dnscrypt-proxy:
+    image: klutchell/dnscrypt-proxy:2.1.4
+    container_name: dnscrypt-proxy
+    networks:
+      resolver-internal:
+        ipv4_address: "192.168.48.4"
+    volumes:
+      - './dnscrypt-proxy/dnscrypt-proxy.toml:/config/dnscrypt-proxy.toml:ro'
     restart: unless-stopped
 {% if activate_webinterfaces %}
   traefik:

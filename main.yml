@@ -25,6 +25,7 @@
         - "{{ config_dir }}/pihole"
         - "{{ config_dir }}/pihole/etc"
         - "{{ config_dir }}/pihole/dnsmasq"
+        - "{{ config_dir }}/dnscrypt-proxy"
         - "{{ config_dir }}/record-service"
         - "{{ config_dir }}/record-service/www"
         - "{{ config_dir }}/record-service/config"
@@ -36,6 +37,8 @@
       loop:
         - src: docker-compose.yml.j2
           dest: docker-compose.yml
+        - src: dnscrypt-proxy/dnscrypt-proxy.toml.j2
+          dest: dnscrypt-proxy/dnscrypt-proxy.toml
         - src: record-service/www/index.html.j2
           dest: record-service/www/index.html
         - src: record-service/www/api.json.j2

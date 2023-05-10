@@ -70,7 +70,9 @@ services:
     environment:
 {% if activate_webinterfaces %}
 {% if activate_pihole_webgui %}
-      WEBPASSWORD: Changeme01 #ToDo: parameterize
+{% if pihole_webgui_password|default('') != '' %}
+      WEBPASSWORD: "${PI_HOLE_PW}"
+{% endif %}
       VIRTUAL_HOST: "pihole.ns.{{ dns_zone }}"
 {% endif %}
 {% endif %}

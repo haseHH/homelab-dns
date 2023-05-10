@@ -49,8 +49,13 @@
           dest: record-service/config/yaml-mime-type.conf
 
     - name: Ensure homelab-dns configuration is running
-      ansible.builtin.command:
-        cmd: docker compose up --detach
+      ansible.builtin.shell:
+        cmd: |
+          set +o history # temporarily turn off history
+          export PI_HOLE_PW={{ pihole_webgui_password|default('') }}
+          set -o history # turn it back on
+          docker compose up --detach
+        executable: /bin/bash
         chdir: "{{ config_dir }}"
       register: docker_compose
 

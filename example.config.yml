@@ -69,3 +69,8 @@ activate_record_list_service: true
 
 # Activate the Pi-hole web GUI (on 'pihole'-subdomain, e.g. pihole.ns.home.example.com)
 activate_pihole_webgui: true
+
+# Set the Pi-hole web GUI password, leave empty for a randomly generated one
+# Never commit your actual password to any repository!
+# The random password can be fetched from the container log!
+pihole_webgui_password: ""

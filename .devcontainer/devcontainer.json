@@ -32,12 +32,13 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "eamodio.gitlens",
-                "yzhang.markdown-all-in-one",
-                "DavidAnson.vscode-markdownlint",
-                "vscode-icons-team.vscode-icons",
-                "redhat.vscode-yaml"
-            ]
+				"eamodio.gitlens",
+				"yzhang.markdown-all-in-one",
+				"DavidAnson.vscode-markdownlint",
+				"vscode-icons-team.vscode-icons",
+				"samuelcolvin.jinjahtml",
+				"redhat.vscode-yaml"
+			]
         }
     }
 

@@ -1,4 +1,11 @@
 {
     "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true
+    "files.insertFinalNewline": true,
+    "files.associations": {
+        "*.html.j2": "jinja-html",
+        "*.json.j2": "jinja-json",
+        "*.yml.j2": "jinja-yaml",
+        "*.yaml.j2": "jinja-yaml",
+        "*.toml.j2": "jinja-toml"
+    }
 }

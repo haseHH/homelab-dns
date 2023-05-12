@@ -70,7 +70,7 @@ services:
     environment:
 {% if activate_webinterfaces %}
 {% if activate_pihole_webgui %}
-{% if pihole_webgui_password|default('') != '' %}
+{% if pihole_webgui_password|default('')|length > 0 %}
       WEBPASSWORD: "${PI_HOLE_PW}"
 {% endif %}
       VIRTUAL_HOST: "pihole.ns.{{ dns_zone }}"

@@ -51,9 +51,11 @@
     - name: Ensure homelab-dns configuration is running
       ansible.builtin.shell:
         cmd: |
+          {% if activate_webinterfaces and activate_pihole_webgui %}
           set +o history # temporarily turn off history
           export PI_HOLE_PW={{ pihole_webgui_password|default('') }}
           set -o history # turn it back on
+          {% endif %}
           docker compose up --detach
         executable: /bin/bash
         chdir: "{{ config_dir }}"

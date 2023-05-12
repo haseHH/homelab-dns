@@ -63,6 +63,12 @@ activate_webinterfaces: true
 # Activate the traefik API and Dashboard (on 'traefik'-subdomain, e.g. traefik.ns.home.example.com)
 activate_traefik_dashboard: true
 
+# Set the username and password for traefik, leave empty to not require authentication
+# Never commit your actual password to any repository!
+# If you make the web ports 80 and/or 443 available from the internet do not leave this blank!
+traefik_user: ""
+traefik_password: ""
+
 # Serve DNS record list (served at the host FQDN, e.g. ns.home.example.com)
 # A small webserver with a list of all DNS entries that were configured in the BIND9 section
 activate_record_list_service: true

@@ -16,6 +16,22 @@
     - name: Install Docker if not available
       ansible.builtin.import_tasks: tasks/docker-setup.yml
 
+    - name: Install htpasswd utility
+      ansible.builtin.apt:
+        name: apache2-utils
+        state: present
+      become: true
+      when: activate_webinterfaces and (traefik_user|default('')|length > 0) and (traefik_password|default('')|length > 0)
+
+    - name: generate traefik Basic Auth string
+      ansible.builtin.shell:
+        cmd: |
+          echo $(htpasswd -nbB {{ traefik_user }} {{ traefik_password }}) | sed -e s/\\$/\\$\\$/g
+        executable: /bin/bash
+      when: activate_webinterfaces and (traefik_user|default('')|length > 0) and (traefik_password|default('')|length > 0)
+      changed_when: false
+      register: traefik_basic_auth
+
     - name: Create config directories if they do not exist
       ansible.builtin.file:
         path: "{{ item }}"

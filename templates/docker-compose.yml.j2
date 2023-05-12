@@ -111,7 +111,6 @@ services:
     command:
 {% if activate_traefik_dashboard %}
       - "--api.dashboard=true"
-      # ToDo: implement auth
 {% endif %}
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -119,14 +118,19 @@ services:
       - "--entrypoints.web.address=:80"
       # ToDo: implement optional HTTPS
 {% if activate_traefik_dashboard %}
-      - "traefik.enable=true"
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik.ns.{{ dns_zone }}`) && PathPrefix(`/`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
       - "traefik.http.routers.dashboard.entrypoints=web"
       - "traefik.http.routers.api.rule=Host(`traefik.ns.{{ dns_zone }}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.entrypoints=web"
+{% if (traefik_user|default('')|length > 0) and (traefik_password|default('')|length > 0) %}
+      - "traefik.http.middlewares.traefik-auth.basicauth.users={{ traefik_basic_auth.stdout }}"
+      - "traefik.http.routers.dashboard.middlewares=traefik-auth"
+      - "traefik.http.routers.api.middlewares=traefik-auth"
+{% endif %}
 {% endif %}
     ports:
       - "80:80"

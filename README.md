@@ -7,8 +7,6 @@
 [![Deploys on Docker](https://img.shields.io/badge/Deploys%20on%20Docker-dimgrey?style=flat&logo=docker&logoColor=blue)](https://www.docker.com/)
 [![Runs on Raspberry Pi](https://img.shields.io/badge/Runs%20on%20Raspberry%20Pi-dimgrey?style=flat&logo=raspberrypi&logoColor=firebrick)](https://www.raspberrypi.org/)
 
-> This is a work in progress. Documentation is lacking and features are unfinished.
-
 I am setting up my homelab and need a few more capabilities than what Pi-hole offers out of the box - time to plug a few containers together and throw them on an old Raspberry Pi.
 
 ## DNS Resolution Chain

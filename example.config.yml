@@ -60,6 +60,31 @@ block_private_requests_to_public_servers: true
 # Setting this to false will cause the code to ignore everything else in this section.
 activate_webinterfaces: true
 
+# The logging level for traefik, default is ERROR.
+# Alternative logging levels are DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
+traefik_log_level: "ERROR"
+
+# Whether to use HTTPS instead of HTTP
+activate_https: true
+
+# To get certificates, traefik needs additional configuration. This will take some time after startup!
+# This is an example of parameters to request SSL certs from Let's Encrypt using the DNS-01 challenge with the Cloudflare provider:
+additional_traefik_environment_vars:
+  - name: "CF_API_EMAIL"
+    value: "cloudflare-user@example.com"
+  - name: "CLOUDFLARE_DNS_API_TOKEN"
+    value: "YOUR-DNS-API-TOKEN"
+additional_traefik_cli_params:
+  # use the letsencrypt staging endpoint for testing
+  - "--certificatesresolvers.certresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+  # prod endpoint for when all is tested
+  #- "--certificatesresolvers.certresolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
+  - "--certificatesresolvers.certresolver.acme.email=webmaster@example.com"
+  - "--certificatesresolvers.certresolver.acme.dnschallenge=true"
+  - "--certificatesresolvers.certresolver.acme.dnschallenge.provider=cloudflare"
+  # to connect to cloudflare DNS directly when verifying the DNS challenge, as to not be blocked by our Pi-hole block rule
+  - "--certificatesresolvers.certresolver.acme.dnschallenge.resolvers=1.1.1.1:53"
+
 # Activate the traefik API and Dashboard (on 'traefik'-subdomain, e.g. traefik.ns.home.example.com)
 activate_traefik_dashboard: true
 

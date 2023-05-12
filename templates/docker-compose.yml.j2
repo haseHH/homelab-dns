@@ -14,6 +14,11 @@ networks:
     driver: bridge
 {% endif %}
 
+{% if activate_https %}
+volumes:
+  traefik-certs:
+{% endif %}
+
 services:
   bind9:
     container_name: bind9
@@ -62,9 +67,15 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole.rule=Host(`pihole.ns.{{ dns_zone }}`)"
-      - "traefik.http.routers.pihole.entrypoints=web"
       - "traefik.http.routers.pihole.service=pihole" # manual service config to address the correct port
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
+{% if activate_https %}
+      - "traefik.http.routers.pihole.tls=true"
+      - "traefik.http.routers.pihole.tls.certresolver=certresolver"
+      - "traefik.http.routers.pihole.entrypoints=websecure"
+{% else %}
+      - "traefik.http.routers.pihole.entrypoints=web"
+{% endif %}
 {% endif %}
 {% endif %}
     environment:
@@ -108,7 +119,14 @@ services:
   traefik:
     image: "traefik:v2.10"
     container_name: "traefik"
+{% if additional_traefik_environment_vars|default([])|length > 0 %}
+    environment:
+{% for var in additional_traefik_environment_vars %}
+      - "{{ var.name ~ '=${' ~ var.name ~ '}' }}"
+{% endfor %}
+{% endif %}
     command:
+      - "--log.level={{ traefik_log_level|default('ERROR') }}"
 {% if activate_traefik_dashboard %}
       - "--api.dashboard=true"
 {% endif %}
@@ -116,16 +134,33 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=resolver-external"
       - "--entrypoints.web.address=:80"
-      # ToDo: implement optional HTTPS
+{% if activate_https %}
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.certresolver.acme.storage=/certs/acme.json"
+{% for param in additional_traefik_cli_params %}
+      - "{{ param }}"
+{% endfor %}
+{% endif %}
 {% if activate_traefik_dashboard %}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik.ns.{{ dns_zone }}`) && PathPrefix(`/`)"
       - "traefik.http.routers.dashboard.service=dashboard@internal"
-      - "traefik.http.routers.dashboard.entrypoints=web"
       - "traefik.http.routers.api.rule=Host(`traefik.ns.{{ dns_zone }}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.api.service=api@internal"
+{% if activate_https %}
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls.certresolver=certresolver"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.routers.api.tls.certresolver=certresolver"
+{% else %}
+      - "traefik.http.routers.dashboard.entrypoints=web"
       - "traefik.http.routers.api.entrypoints=web"
+{% endif %}
 {% if (traefik_user|default('')|length > 0) and (traefik_password|default('')|length > 0) %}
       - "traefik.http.middlewares.traefik-auth.basicauth.users={{ traefik_basic_auth.stdout }}"
       - "traefik.http.routers.dashboard.middlewares=traefik-auth"
@@ -134,10 +169,16 @@ services:
 {% endif %}
     ports:
       - "80:80"
+{% if activate_https %}
+      - "443:443"
+{% endif %}
     networks:
       resolver-external:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+{% if activate_https %}
+      - "traefik-certs:/certs"
+{% endif %}
     restart: unless-stopped
 {% if activate_record_list_service %}
   record-service:
@@ -146,7 +187,13 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.record-service.rule=Host(`ns.{{ dns_zone }}`)"
+{% if activate_https %}
+      - "traefik.http.routers.record-service.entrypoints=websecure"
+      - "traefik.http.routers.record-service.tls=true"
+      - "traefik.http.routers.record-service.tls.certresolver=certresolver"
+{% else %}
       - "traefik.http.routers.record-service.entrypoints=web"
+{% endif %}
     networks:
       resolver-external:
     volumes:

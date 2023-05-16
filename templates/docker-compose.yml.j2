@@ -132,7 +132,7 @@ services:
 {% endif %}
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=resolver-external"
+      - "--providers.docker.network={{ docker_compose_project.stdout }}_resolver-external"
       - "--entrypoints.web.address=:80"
 {% if activate_https %}
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"

@@ -46,6 +46,16 @@
         - "{{ config_dir }}/record-service/www"
         - "{{ config_dir }}/record-service/config"
 
+    - name: Get docker compose project name from config directory
+      ansible.builtin.shell:
+        cmd: |
+          echo ${PWD##*/}
+        executable: /bin/bash
+        chdir: "{{ config_dir }}"
+      when: activate_webinterfaces
+      changed_when: false
+      register: docker_compose_project
+
     - name: Copy templated config files into place
       ansible.builtin.template:
         src: templates/{{ item.src }}

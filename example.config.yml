@@ -105,3 +105,8 @@ activate_pihole_webgui: true
 # Never commit your actual password to any repository!
 # The random password can be fetched from the container log!
 pihole_webgui_password: ""
+
+# Allow CORS (Cross Origin Request Sharing) to the Pi-hole API, e.g. for homelab dashboards like Homer
+# Add comma-separated values for allowed hosts, or remove/leave empty to prevent all
+# https://doc.traefik.io/traefik/middlewares/http/headers/#cors-headers
+allow_pihole_cors: ""

@@ -69,6 +69,10 @@ services:
       - "traefik.http.routers.pihole.rule=Host(`pihole.ns.{{ dns_zone }}`)"
       - "traefik.http.routers.pihole.service=pihole" # manual service config to address the correct port
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
+{% if allow_pihole_cors|default('')|length > 0 %}
+      - "traefik.http.middlewares.pihole-cors.headers.accesscontrolalloworiginlist={{ allow_pihole_cors }}"
+      - "traefik.http.routers.pihole.middlewares=pihole-cors"
+{% endif %}
 {% if activate_https %}
       - "traefik.http.routers.pihole.tls=true"
       - "traefik.http.routers.pihole.tls.certresolver=certresolver"

@@ -70,8 +70,6 @@ activate_https: true
 # To get certificates, traefik needs additional configuration. This will take some time after startup!
 # This is an example of parameters to request SSL certs from Let's Encrypt using the DNS-01 challenge with the Cloudflare provider:
 additional_traefik_environment_vars:
-  - name: "CF_API_EMAIL"
-    value: "cloudflare-user@example.com"
   - name: "CLOUDFLARE_DNS_API_TOKEN"
     value: "YOUR-DNS-API-TOKEN"
 additional_traefik_cli_params:

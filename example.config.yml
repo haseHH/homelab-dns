@@ -53,6 +53,18 @@ cname_records:
 block_private_requests_to_public_servers: true
 
 #################################################
+# Configure node-exporter                       #
+#################################################
+
+# Deploy the prometheus node-exporter container
+activate_node_exporter: false # still buggy
+
+# Don't expose the node-exporter directly but rather through traefik
+# This requires `activate_webinterfaces` to be `true` to deploy traefik in the first place
+# Protects the metrics traffic with HTTPS (if `activate_https` is `true`)
+route_node_exporter_trough_traefik: false # still buggy
+
+#################################################
 # Configure webinterfaces                       #
 #################################################
 

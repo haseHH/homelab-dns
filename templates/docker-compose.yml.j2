@@ -140,6 +140,9 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network={{ docker_compose_project.stdout }}_resolver-external"
       - "--entrypoints.web.address=:80"
+{% if route_node_exporter_trough_traefik %}
+      - "--entrypoints.metrics.address=:9100"
+{% endif %}
 {% if activate_https %}
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
@@ -178,6 +181,9 @@ services:
 {% if activate_https %}
       - "443:443"
 {% endif %}
+{% if route_node_exporter_trough_traefik %}
+      - "9100:9100"
+{% endif %}
     networks:
       resolver-external:
     volumes:
@@ -207,4 +213,36 @@ services:
       - ./record-service/config/yaml-mime-type.conf:/etc/nginx/conf.d/yaml-mime-type.conf:ro
     restart: unless-stopped
 {% endif %}
+{% endif %}
+{% if activate_node_exporter %}
+  node-exporter:
+    image: quay.io/prometheus/node-exporter:v1.5.0
+    container_name: node-exporter
+{% if activate_webinterfaces and route_node_exporter_trough_traefik %}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.node-exporter.rule=Host(`ns.{{ dns_zone }}`)"
+      - "traefik.http.routers.node-exporter.entrypoints=metrics"
+{% if activate_https %}
+      - "traefik.http.routers.node-exporter.tls=true"
+      - "traefik.http.routers.node-exporter.tls.certresolver=certresolver"
+{% endif %}
+{% else %}
+    ports:
+      - "9100:9100"
+{% endif %}
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+      - /:/host:ro,rslave
+    command:
+      - '--path.rootfs=/host'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    networks:
+      resolver-external:
+    restart: unless-stopped
 {% endif %}

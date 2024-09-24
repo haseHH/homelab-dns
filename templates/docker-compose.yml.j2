@@ -61,7 +61,7 @@ services:
     restart: unless-stopped
   pihole:
     container_name: pihole
-    image: pihole/pihole:2023.03.1
+    image: pihole/pihole:2024.07.0
 {% if activate_webinterfaces %}
 {% if activate_pihole_webgui %}
     labels:
@@ -91,7 +91,7 @@ services:
       VIRTUAL_HOST: "pihole.ns.{{ dns_zone }}"
 {% endif %}
 {% endif %}
-      PIHOLE_DNS_: "192.168.48.4#5053" # use dnscrypt-proxy as upstream
+      PIHOLE_DNS_: "192.168.48.4" # use dnscrypt-proxy as upstream
       WEBTHEME: default-dark
       DNSMASQ_LISTENING: local
       FTLCONF_LOCAL_IPV4: "{{ ansible_facts['default_ipv4']['address'] }}"
@@ -106,6 +106,8 @@ services:
 {% endif %}
       resolver-internal:
         ipv4_address: "192.168.48.3"
+    dns:
+      - 192.168.48.4 # use dnscrypt-proxy for in-container resolution
     volumes:
       - './pihole/etc:/etc/pihole'
       - './pihole/dnsmasq:/etc/dnsmasq.d'

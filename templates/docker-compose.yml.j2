@@ -53,8 +53,8 @@ services:
 {% endif %}
       - ALLOW_QUERY={{ allowed_clients }}
     ports:
-      - "53:53/tcp"
-      - "53:53/udp"
+      - "{{ ansible_facts['default_ipv4']['address'] }}:53:53/tcp"
+      - "{{ ansible_facts['default_ipv4']['address'] }}:53:53/udp"
     networks:
       resolver-internal:
         ipv4_address: "192.168.48.2"

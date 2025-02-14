@@ -185,7 +185,12 @@ services:
       - "9100:9100"
 {% endif %}
     networks:
+      # external for access to the HTTP services over the proxy
       resolver-external:
+      # internal for traefik to use bind9 as DNS resolver
+      resolver-internal:
+    dns:
+      - 192.168.48.2 # use bind9 for in-container resolution
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 {% if activate_https %}
